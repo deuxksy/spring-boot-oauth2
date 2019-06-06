@@ -15,37 +15,43 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        //@formatter:off
-		http
-                .csrf().disable()
-                .authorizeRequests().anyRequest().authenticated().and()
-                .formLogin().and()
-                .httpBasic();
-        //@formatter:on
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    //@formatter:off
+    http
+      .headers().frameOptions().disable()
+      .and().csrf().disable()
+        .authorizeRequests().antMatchers("/h2-console/**").permitAll()
+        .anyRequest().authenticated()
+      .and().formLogin()
+      .and().httpBasic();
+    //@formatter:on
+  }
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder encoder() {
+    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+  }
 
 
-    @Bean
-    @Override
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
+  @Bean
+  @Override
+  protected AuthenticationManager authenticationManager() throws Exception {
+    return super.authenticationManager();
+  }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        //@formatter:off
-        auth
-                .inMemoryAuthentication()
-                .withUser("user").password("{noop}pass").roles("USER");
-        //@formatter:on
+  @Autowired
+  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    //@formatter:off
+    auth
+//      .jdbcAuthentication()
+      .inMemoryAuthentication()
+      .withUser("user")
+      .password("{noop}pass")
+      .roles("USER")
+    ;
+    //@formatter:on
 
-    }
+  }
 
 }

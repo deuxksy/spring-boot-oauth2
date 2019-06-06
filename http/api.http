@@ -17,8 +17,17 @@ POST http://localhost:8080/oauth/token
 Content-Type: application/x-www-form-urlencoded
 Authorization: Basic Y2xpZW50OnBhc3N3b3Jk
 
-code=lg8HLw&grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Fcallback&scope=read_profile
+code=IMnqI0&grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Fcallback&scope=read_profile
 ###
+
+
+#{
+#  "access_token": "0e976022-c348-49c0-9f9d-c2998df38af3",
+#  "token_type": "bearer",
+#  "refresh_token": "3914ad71-5dea-47f8-89a6-e145f43061df",
+#  "expires_in": 2999,
+#  "scope": "read_profile"
+#}
 
 # Password Grant Type 토큰 요청
 POST http://localhost:8080/oauth/token
@@ -48,6 +57,6 @@ grant_type=refresh_token&scope=read_profile&refresh_token=2ec7cfcc-110b-42a0-859
 # session 조회
 GET http://localhost:8080/api/session
 Accept: application/json
-Authorization: Bearer 9298f76f-c10c-4802-ba60-6c49d3e715f3
+Authorization: Bearer 0e976022-c348-49c0-9f9d-c2998df38af3
 
 ###

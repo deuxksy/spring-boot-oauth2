@@ -1,4 +1,6 @@
-INSERT INTO `oauth_client_details`(
+select * from oauth_client_details;
+
+INSERT INTO `oauth_client_details` (
   `client_id`,
   `resource_ids`,
   `client_secret`,
@@ -10,9 +12,7 @@ INSERT INTO `oauth_client_details`(
   `refresh_token_validity`,
   `additional_information`,
   `autoapprove`
-  )
-
-  VALUES(
+) VALUES (
   'client',
   null,
   '{bcrypt}$2a$10$iP9ejueOGXO29.Yio7rqeuW9.yOC4YaV8fJp3eIWbP45eZSHFEwMG',
@@ -24,4 +24,4 @@ INSERT INTO `oauth_client_details`(
   6000,
   null ,
   'false'
-  );
+);
