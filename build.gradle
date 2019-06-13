@@ -36,7 +36,7 @@ applicationDefaultJvmArgs = [
         "-Xmx128m",
         "-XX:+UseG1GC"
 ]
-mainClassName = "tricycle.service.pig.TricycleApplication"
+mainClassName = "com.zzizily.oauth2.Application"
 
 if (profile != "local" && profile != "dev") {
   //gc 발생시 로그 확인
