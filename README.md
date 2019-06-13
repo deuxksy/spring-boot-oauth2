@@ -1,4 +1,4 @@
-## 프로젝트 소개
+## spring-boot-oauth2
 
 Spring Boot 2.1 기반으로 Spring Security OAuth2를 살펴보는 프로젝트입니다. 
 
