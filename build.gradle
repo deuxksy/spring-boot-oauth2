@@ -1,0 +1,149 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
+
+  }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:${pluginSpringBootGradle}"
+    classpath "io.spring.gradle:dependency-management-plugin:${pluginDependencyManagement}"
+    classpath "com.bmuschko:gradle-docker-plugin:${pluginGradleDocker}"
+    classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:${pluginGradleGitProperties}"
+  }
+}
+
+apply plugin: "java"
+apply plugin: "application"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "com.gorylenko.gradle-git-properties"
+apply plugin: "com.bmuschko.docker-spring-boot-application"
+
+group = "com.zzizily"
+description = project.name
+version = "${version}"
+sourceCompatibility = compatibilityVersion
+targetCompatibility = compatibilityVersion
+[compileJava, compileTestJava]*.options*.encoding = "${encoding}"
+applicationDefaultJvmArgs = [
+        "-Dfile.encoding=${encoding}",
+        "-Djava.net.preferIPv4Stack=true",
+        "-XX:MaxMetaspaceSize=64m",
+        "-Xms128m",
+        "-Xmx128m",
+        "-XX:+UseG1GC"
+]
+mainClassName = "tricycle.service.pig.TricycleApplication"
+
+if (profile != "local" && profile != "dev") {
+  //gc 발생시 로그 확인
+  applicationDefaultJvmArgs.addAll([
+          "-verbose:gc",
+          "-XX:+PrintGCDetails",
+          "-XX:+PrintGCDetails",
+          "-XX:+PrintGCDateStamps",
+//          "-Xloggc:/home/ec2-user/log/${project.name}/gc.log"
+  ])
+}
+System.setProperty("spring.profiles.active", profile)
+println("profile: ${profile}")
+
+wrapper {
+  gradleVersion = "5.2.1"
+  distributionType = Wrapper.DistributionType.BIN
+}
+
+configurations {
+  compile.exclude module: "spring-boot-starter-tomcat"
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+bootDistZip {
+  baseName = project.name
+//  classifier = ""
+//  appendix = ""
+}
+
+bootJar {
+  enabled = true
+}
+
+jar {
+  enabled = true
+  manifest {
+    attributes(
+            "Implementation-Title": "${project.name}",
+            "Implementation-Version": "${project.version}"
+    )
+  }
+}
+
+gitProperties {
+  dateFormat = "yyyy-MM-dd HH:mm:ss"
+  dateFormatTimeZone = "Asia/Seoul"
+}
+
+docker {
+  springBootApplication {
+    baseImage = 'openjdk:8-jre-alpine'
+    jvmArgs = applicationDefaultJvmArgs
+  }
+}
+
+springBoot {
+  buildInfo()
+}
+
+test {
+  useJUnitPlatform()
+}
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+dependencyManagement {
+  imports {
+    mavenBom              "org.springframework.cloud:spring-cloud-dependencies:${managementSpringCloudVersion}"
+    mavenBom              "de.codecentric:spring-boot-admin-dependencies:${managementSpringBootAdmin}"
+  }
+}
+
+dependencies {
+  implementation          "org.springframework.boot:spring-boot-starter-web"
+  implementation          "org.springframework.boot:spring-boot-starter-undertow"
+  implementation          "org.springframework.boot:spring-boot-starter-data-jpa"
+  implementation          "org.springframework.boot:spring-boot-starter-security"
+  implementation          "org.springframework.boot:spring-boot-starter-thymeleaf"
+  implementation          "org.springframework.boot:spring-boot-starter-jdbc"
+  implementation          "org.springframework.boot:spring-boot-starter-thymeleaf"
+  implementation          "org.springframework.security.oauth:spring-security-oauth2:${dependencySpringSecurityOauth2}"
+  implementation          "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${dependencySpringSecurityOauth2Autoconfigure}"
+
+  implementation          "com.h2database:h2"
+  compileOnly             "org.projectlombok:lombok"
+  annotationProcessor     "org.projectlombok:lombok"
+
+  testImplementation     ("org.springframework.boot:spring-boot-starter-test") {
+    exclude module:       "junit"
+  }
+  testImplementation      "org.springframework.security:spring-security-test"
+  testImplementation      "org.springframework.restdocs:spring-restdocs-core"
+  testImplementation      "org.springframework.restdocs:spring-restdocs-mockmvc"
+  testImplementation      "org.junit.jupiter:junit-jupiter-api:${dependencyJunitJupiter}"
+  testImplementation      "org.junit.jupiter:junit-jupiter-engine:${dependencyJunitJupiter}"
+  testImplementation      "org.junit.jupiter:junit-jupiter-params:${dependencyJunitJupiter}"
+  testImplementation      "org.junit.platform:junit-platform-engine:${dependencyJunitPlatform}"
+  testImplementation      "org.junit.platform:junit-platform-commons:${dependencyJunitPlatform}"
+  testImplementation      "org.junit.vintage:junit-vintage-engine:${dependencyJunitJupiter}"
+  // test db
+  testRuntimeOnly         "com.h2database:h2"
+  testCompileOnly         "org.projectlombok:lombok"
+  testAnnotationProcessor "org.projectlombok:lombok"
+}
