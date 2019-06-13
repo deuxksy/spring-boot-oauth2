@@ -1,4 +1,4 @@
-package com.example.oauth2.config;
+package com.zzizily.oauth2.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    //@formatter:off
     http
       .headers().frameOptions().disable()
       .and().csrf().disable()
@@ -25,7 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .anyRequest().authenticated()
       .and().formLogin()
       .and().httpBasic();
-    //@formatter:on
   }
 
   @Bean
@@ -42,7 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    //@formatter:off
     auth
 //      .jdbcAuthentication()
       .inMemoryAuthentication()
@@ -50,7 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .password("{noop}pass")
       .roles("USER")
     ;
-    //@formatter:on
 
   }
 

@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: local
+  application:
+    name: spring-boot-oauth2
 
 logging:
   level:

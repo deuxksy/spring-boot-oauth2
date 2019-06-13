@@ -1,4 +1,4 @@
-package com.example.oauth2.config;
+package com.zzizily.oauth2.config;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;

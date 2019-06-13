@@ -1,4 +1,4 @@
-package com.example.oauth2;
+package com.zzizily.oauth2;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
