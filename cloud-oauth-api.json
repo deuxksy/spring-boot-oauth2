@@ -1,0 +1,370 @@
+{
+  "front-version": "2.19.2",
+  "version": 3,
+  "nodes": [
+    {
+      "type": "Project",
+      "id": "08cbcdde-0e51-4e12-93f8-a55d6226ce56",
+      "lastModified": "2019-07-10T18:17:01.792+09:00",
+      "name": "tricycle-cloud-oauth"
+    },
+    {
+      "type": "Service",
+      "id": "be9e3afa-ece1-436a-b33b-880df1ff5dac",
+      "lastModified": "2019-07-10T18:17:01.792+09:00",
+      "name": "password",
+      "parentId": "08cbcdde-0e51-4e12-93f8-a55d6226ce56"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "password"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "username",
+              "value": "user"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "password",
+              "value": "password"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "cloud-oauth-${profile}-service-pig.trcc.com:${port}",
+        "path": "/oauth/token"
+      },
+      "id": "cf4467e2-d989-471f-ae93-65e3eee337a6",
+      "lastModified": "2019-07-10T17:46:36.315+09:00",
+      "name": "01.request-token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic  ${\"oauth-client-secret\".base64()}"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "google-oauth2|110333266460028147313"
+      },
+      "parentId": "be9e3afa-ece1-436a-b33b-880df1ff5dac"
+    },
+    {
+      "type": "Scenario",
+      "description": "",
+      "id": "649c965a-446d-4277-8e75-bc4918cdcff9",
+      "lastModified": "2019-07-10T18:16:56.403+09:00",
+      "name": "authorization_code",
+      "requestOrder": [
+        "01.request-code",
+        "02.request-token",
+        "03.get-data"
+      ],
+      "parentId": "08cbcdde-0e51-4e12-93f8-a55d6226ce56"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "cient"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "redirect_uri",
+              "value": "http://localhost:9000/callback"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "response_type",
+              "value": "code"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true,
+        "textBody": "{\"error\":\"invalid_token\",\"error_description\":\"Invalid access token: 488d2ab0-6a99-4729-896d-0d22b30033c9\"}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "client_id",
+              "value": "client"
+            },
+            {
+              "enabled": true,
+              "name": "redirect_uri",
+              "value": "http://localhost:9000/callback"
+            },
+            {
+              "enabled": true,
+              "name": "response_type",
+              "value": "code"
+            },
+            {
+              "enabled": true,
+              "name": "scope",
+              "value": "read_profile"
+            }
+          ]
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "{host}:${port}",
+        "path": "/oauth/authorize"
+      },
+      "id": "c18a3781-1449-4f89-8549-37d050e7702e",
+      "lastModified": "2019-07-10T18:02:22.100+09:00",
+      "name": "01.request-code",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic  ${\"oauth-username-password\".base64()}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Contains",
+          "subject": "ResponseHeader",
+          "path": "Location",
+          "value": "http://localhost:9000/callback"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "google-oauth2|110333266460028147313"
+      },
+      "parentId": "649c965a-446d-4277-8e75-bc4918cdcff9"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "code",
+              "value": "${\"request-code\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "authorization_code"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "redirect_uri",
+              "value": "http://localhost:9000/callback"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host\"}:${\"port\"}",
+        "path": "/oauth/token"
+      },
+      "id": "472e790e-9812-43de-8c09-abba094a6abf",
+      "lastModified": "2019-07-10T18:15:14.918+09:00",
+      "name": "02.request-token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic ${\"oauth-client-secret\".base64()}"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "google-oauth2|110333266460028147313"
+      },
+      "parentId": "649c965a-446d-4277-8e75-bc4918cdcff9"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Form",
+        "autoSetLength": true,
+        "textBody": "{\"error\":\"invalid_token\",\"error_description\":\"Invalid access token: 488d2ab0-6a99-4729-896d-0d22b30033c9\"}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}:${port}",
+        "path": "/api/session"
+      },
+      "id": "6c65f878-145e-462f-9a8f-acd87c56d628",
+      "lastModified": "2019-07-10T18:16:10.351+09:00",
+      "name": "03.get-data",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${\"access_token\"}"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "google-oauth2|110333266460028147313"
+      },
+      "parentId": "649c965a-446d-4277-8e75-bc4918cdcff9"
+    },
+    {
+      "type": "Context",
+      "id": "9b91be62-0693-45e3-b484-85134d31e16c",
+      "lastModified": "2019-07-10T18:16:25.427+09:00",
+      "name": "tricycle-local",
+      "variables": [
+        {
+          "enabled": true,
+          "name": "profile",
+          "value": "local"
+        },
+        {
+          "enabled": true,
+          "name": "port",
+          "value": "8080"
+        },
+        {
+          "enabled": true,
+          "name": "oauth-client-secret",
+          "value": "client:password"
+        },
+        {
+          "enabled": true,
+          "name": "oauth-username-password",
+          "value": "user:password"
+        },
+        {
+          "enabled": true,
+          "name": "host",
+          "value": "cloud-oauth-local-service-pig.trcc.com"
+        },
+        {
+          "enabled": true,
+          "name": "request-code",
+          "value": "T72KPa"
+        },
+        {
+          "enabled": true,
+          "name": "access_token",
+          "value": "b34918d9-1418-4ea3-b33e-31ef4fd672f2"
+        },
+        {
+          "enabled": true,
+          "name": "refresh_token",
+          "value": "0f9c1631-d922-446b-9688-7c6d17cf8bf8"
+        }
+      ]
+    }
+  ]
+}

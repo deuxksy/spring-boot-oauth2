@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //      .jdbcAuthentication()
       .inMemoryAuthentication()
       .withUser("user")
-      .password("{noop}pass")
+      .password("{noop}password")
       .roles("USER")
     ;
 

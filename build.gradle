@@ -38,7 +38,7 @@ applicationDefaultJvmArgs = [
 ]
 mainClassName = "com.zzizily.oauth2.Application"
 
-if (profile != "local" && profile != "dev") {
+if (profile == "dev" || profile == "stage" || profile == "prod") {
   //gc 발생시 로그 확인
   applicationDefaultJvmArgs.addAll([
           "-verbose:gc",

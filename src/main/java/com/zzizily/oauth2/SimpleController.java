@@ -12,4 +12,14 @@ public class SimpleController {
     public Authentication session() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
+
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
 }
