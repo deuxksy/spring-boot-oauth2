@@ -13,17 +13,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @AllArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
       .headers().frameOptions().disable()
-      .and().csrf().disable()
-        .authorizeRequests().antMatchers("/h2-console/**").permitAll()
+      .and().cors().disable().csrf().disable()
+      .authorizeRequests()
+        .antMatchers("/h2-console/**").permitAll()
+        .antMatchers("/actuator/**").permitAll()
+        .antMatchers("/").permitAll()
         .anyRequest().authenticated()
       .and().formLogin()
-      .and().httpBasic();
+        .permitAll()
+      .and().logout().permitAll()
+      .and().httpBasic()
+
+    ;
   }
 
   @Bean
@@ -43,9 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     auth
 //      .jdbcAuthentication()
       .inMemoryAuthentication()
-      .withUser("user")
-      .password("{noop}password")
-      .roles("USER")
+      .withUser("user").password("{noop}password").roles("USER").and()
+      .withUser("admin").password("{noop}password").roles("ADMIN")
     ;
 
   }

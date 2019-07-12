@@ -3,13 +3,41 @@ spring:
     active: local
   application:
     name: spring-boot-oauth2
+  output:
+    ansi:
+      enabled: always
+
+management:
+  info:
+    git:
+      mode: full
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  #        include: ["health","info","loggers","httptrace","env","beans","caches","configprops","mappings","scheduledtasks","sessions","threaddump","jolokia", "logfile", "refresh"]
+
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+
 
 logging:
   level:
     ROOT: info
-    org:
-      hibernate:
-        type: trace
+    com.zzizily: debug
+    org.springframework.web: trace
+    org.springframework.boot: info
+    org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener.debug: info
+    org.springframework.boot.devtools: info
+    org.springframework.boot.autoconfigure: debug
+    org.springframework.cloud.gateway: trace
+    org.springframework.security: info
+    org.springframework.security.oauth2: debug
+    org.hibernate.SQL: info
+    org.hibernate.type.descriptor.sql: info
+
 
 ---
 spring:

@@ -16,7 +16,7 @@ INSERT INTO `oauth_client_details` (
   '{noop}password',
   'read_profile,read_posts',
   'authorization_code,implicit,password,client_credentials,refresh_token',
-  'http://localhost:9000/callback',
+  'http://cloud-oauth-local-service-pig.trcc.com:8080/callback',
   null,
   60,
   6000,
