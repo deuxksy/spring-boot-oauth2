@@ -1,3 +1,7 @@
+CREATE SCHEMA IF NOT EXISTS oauth;
+
+SET SCHEMA oauth;
+
 -- used in tests that use HSQL
 create table oauth_client_details
 (
@@ -57,19 +61,30 @@ create table oauth_approvals
   lastModifiedAt TIMESTAMP
 );
 
-
--- customized oauth_client_details table
-create table ClientDetails
-(
-  appId                  VARCHAR(256) PRIMARY KEY,
-  resourceIds            VARCHAR(256),
-  appSecret              VARCHAR(256),
-  scope                  VARCHAR(256),
-  grantTypes             VARCHAR(256),
-  redirectUrl            VARCHAR(256),
-  authorities            VARCHAR(256),
-  access_token_validity  INTEGER,
-  refresh_token_validity INTEGER,
-  additionalInformation  VARCHAR(4096),
-  autoApproveScopes      VARCHAR(256)
+-- 사용자 정보
+create table oauth_user (
+  id serial PRIMARY KEY,
+  username VARCHAR(256),
+  password VARCHAR(256),
+  site_id  SMALLINT,
+  use_yn  CHAR(1)
 );
+
+
+-- 사용자 롤
+CREATE TABLE oauth_user_role (
+ id serial NOT NULL,
+ oauth_user_id int4 NOT NULL,
+ role varchar(20) NOT NULL,
+ CONSTRAINT oauth_user_role_pk PRIMARY KEY (id)
+);
+
+-- 소셜 계정 정보
+-- CREATE TABLE oauth_social_account (
+--   social_id varchar(100) NOT NULL,
+--   oauth_user_id int4 NOT NULL,
+--   "type" varchar(10) NOT NULL,
+--   insdate timestamp NOT NULL DEFAULT CURRENT_DATE,
+--   CONSTRAINT oauth_social_account_pk PRIMARY KEY (social_id,oauth_user_id,"type")
+-- );
+-- COMMENT ON TABLE oauth_social_account IS '소셜 로그인 연동 계정 관리';
