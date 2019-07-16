@@ -62,22 +62,22 @@ create table oauth_approvals
 );
 
 -- 사용자 정보
-create table oauth_user (
-  id serial PRIMARY KEY,
-  username VARCHAR(256),
-  password VARCHAR(256),
-  site_id  SMALLINT,
-  use_yn  CHAR(1)
-);
+-- create table oauth_user (
+--   id serial PRIMARY KEY,
+--   username VARCHAR(256),
+--   password VARCHAR(256),
+--   site_id  SMALLINT,
+--   use_yn  CHAR(1)
+-- );
 
 
 -- 사용자 롤
-CREATE TABLE oauth_user_role (
- id serial NOT NULL,
- oauth_user_id int4 NOT NULL,
- role varchar(20) NOT NULL,
- CONSTRAINT oauth_user_role_pk PRIMARY KEY (id)
-);
+-- CREATE TABLE oauth_user_role (
+--  id serial NOT NULL,
+--  oauth_user_id int4 NOT NULL,
+--  role varchar(20) NOT NULL,
+--  CONSTRAINT oauth_user_role_pk PRIMARY KEY (id)
+-- );
 
 -- 소셜 계정 정보
 -- CREATE TABLE oauth_social_account (

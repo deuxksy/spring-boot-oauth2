@@ -1,7 +1,6 @@
 package com.zzizily.oauth2.config;
 
 import com.zzizily.oauth2.user.service.OauthUserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
