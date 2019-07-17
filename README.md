@@ -7,7 +7,12 @@ Spring Boot 2.1 기반으로 Spring Security OAuth2를 살펴보는 프로젝트
 - Resource Owner Password Credentials Grant
 - Client Credentials Grant Type OAuth2 
 
-인증 방식에 대한 간단한 셈플 코드부터 OAuth2 TokenStore 저장을 h2, redis 
+인증 방식에 대한 간단한 셈플 코드부터 DB 는 h2, redis 는 예정 입니다.
+
+- Oauth 한계 로 인한 JWT 연동 
+  - 사용자 정보(이름과 회원 등급) 을 Oauth 에서 내려 줄수 있게 하기
+  - 인증 서버 검증 회수 시도를 없애보자
+
 
 ## 구성
 
