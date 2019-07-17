@@ -3,8 +3,6 @@ package com.zzizily.oauth2.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
@@ -13,6 +11,11 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
 
@@ -29,7 +32,8 @@ public class BeanConfig {
 
   @Bean
   public TokenStore tokenStore() {
-    return new JdbcTokenStore(dataSource);
+    return new JwtTokenStore(jwtAccessTokenConverter());
+//    return new JdbcTokenStore(dataSource);
   }
 
   @Bean
@@ -43,6 +47,28 @@ public class BeanConfig {
     tokenServices.setSupportRefreshToken(true);
     tokenServices.setTokenStore(new JdbcTokenStore(dataSource));
     return tokenServices;
+  }
+
+  @Bean
+  public JwtAccessTokenConverter jwtAccessTokenConverter() {
+    JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+    jwtAccessTokenConverter.setSigningKey("tricycle");
+    return jwtAccessTokenConverter;
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+//    corsConfiguration.addAllowedOrigin("*");
+//    corsConfiguration.addAllowedMethod("*");
+//    corsConfiguration.addAllowedHeader("*");
+//    corsConfiguration.setAllowCredentials(true);
+//    corsConfiguration.setMaxAge(3600L);
+
+    urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+    return urlBasedCorsConfigurationSource;
   }
 
   /**

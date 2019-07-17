@@ -35,19 +35,20 @@ spring:
     initialization-mode: embedded
 #    script 에서 한글 입력 가능 하게
     sql-script-encoding: UTF-8
-#    SQL 오류 발생해도 종료 안되게 (true)
+#    SQL 오류 발생하면 안종료 - true, 종료 - false
     continue-on-error: false
   h2:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: true
   jpa:
     properties:
       hibernate.format_sql: true
       hibernate.show_sql: true
       hibernate.use_sql_comments: true
       hibernate.jdbc.lob.non_contextual_creation: true
-      hibernate.jdbc.diralect: org.hibernate.dialect.PostgreSQL95Dialect
     hibernate:
       # ddl-auto 설정
       # none: 기본 값이며 아무 일도 일어나지 않는다.
@@ -58,7 +59,81 @@ spring:
       ddl-auto: create
     show-sql: true
     open-in-view: true
-    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
+    database: h2
+
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins:
+          - http://www.halfclub.com
+          - http://www.boribori.co.kr
+          - http://www.ogage.co.kr
+          - http://www.trcc.tk
+          - http://cloud-eureka1-local-service-pig.trcc.com:8761
+          - http://cloud-eureka2-local-service-pig.trcc.com:8761
+          - http://cloud-config-local-service-pig.trcc.com:8888
+          - http://cloud-monitor-local-service-pig.trcc.com:8080
+          - http://cloud-oauth-local-service-pig.trcc.com:8081
+          - http://cloud-gateway-local-service-pig.trcc.com:8080
+          - http://api-skeleton-local-service-pig.trcc.com:28001
+          - http://api-skeleton-local-service-pig.trcc.com:28002
+          - http://api-skeleton-local-service-pig.trcc.com:28003
+          - http://api-skeleton-local-service-pig.trcc.com:28004
+          - http://api-skeleton-local-service-pig.trcc.com:28005
+          - http://client-skeleton-local-service-pig.trcc.com:38001
+          - http://mhalf-main-local-service-pig.trcc.com:38101
+          - http://half-list-local-service-pig.trcc.com:38102
+          - http://half-main-local-service-pig.trcc.com:38201
+          - http://half-list-local-service-pig.trcc.com:38202
+          - http://mbori-main-local-service-pig.trcc.com:38301
+          - http://mbori-list-local-service-pig.trcc.com:38302
+          - http://bori-main-local-service-pig.trcc.com:38401
+          - http://bori-list-local-service-pig.trcc.com:38402
+          - https://client-payment-local-service-pig.trcc.com:38443
+          - http://cloud-eureka1-local-service-pig.trcc.tk:8761
+          - http://cloud-eureka2-local-service-pig.trcc.tk:8761
+          - http://cloud-config-local-service-pig.trcc.tk:8888
+          - http://cloud-monitor-local-service-pig.trcc.tk:8080
+          - http://cloud-oauth-local-service-pig.trcc.tk:8081
+          - http://cloud-gateway-local-service-pig.trcc.tk:8080
+          - http://api-skeleton-local-service-pig.trcc.tk:28001
+          - http://api-skeleton-local-service-pig.trcc.tk:28002
+          - http://api-skeleton-local-service-pig.trcc.tk:28003
+          - http://api-skeleton-local-service-pig.trcc.tk:28004
+          - http://api-skeleton-local-service-pig.trcc.tk:28005
+          - http://client-skeleton-local-service-pig.trcc.tk:38001
+          - http://mhalf-main-local-service-pig.trcc.tk:38101
+          - http://half-list-local-service-pig.trcc.tk:38102
+          - http://half-main-local-service-pig.trcc.tk:38201
+          - http://half-list-local-service-pig.trcc.tk:38202
+          - http://mbori-main-local-service-pig.trcc.tk:38301
+          - http://mbori-list-local-service-pig.trcc.tk:38302
+          - http://bori-main-local-service-pig.trcc.tk:38401
+          - http://bori-list-local-service-pig.trcc.tk:38402
+          - https://client-payment-local-service-pig.trcc.tk:38443
+#        allowed-headers:
+#          - Access-Control-Allow-Origin
+        allowed-methods:
+          - GET
+          - POST
+          - PUT
+          - OPTION
+          - DELETE
+        allow-credentials: true
+
+security:
+  oauth2:
+    authorization:
+      jwt:
+        key-value: |
+          -----BEGIN PUBLIC KEY-----
+          ..........
+          -----END PUBLIC KEY-----
+
+
+
 
 logging:
   level:

@@ -76,13 +76,12 @@ public class OauthUserServiceImpl implements OauthUserService {
 
   private Collection<? extends GrantedAuthority> getAuthorities(List<OauthUserRole> roles) {
     List<GrantedAuthority> list = new ArrayList<>(1);
-
     if (roles != null) {
-      roles.stream()
-           .forEach((OauthUserRole role) ->
-           {
-             list.add(new SimpleGrantedAuthority(role.getRole()));
-           });
+      roles
+        .stream()
+        .forEach((OauthUserRole role) -> {
+           list.add(new SimpleGrantedAuthority(role.getRole()));
+         });
     }
     return list;
   }

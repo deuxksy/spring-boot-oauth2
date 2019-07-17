@@ -36,19 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     ;
   }
 
-  @Bean
-  @Override
-  protected AuthenticationManager authenticationManager() throws Exception {
-    return super.authenticationManager();
-  }
-
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     auth
-//      .jdbcAuthentication()
-//      .dataSource(dataSource).withDefaultSchema()
-//      .withUser("user").password("{noop}password").roles("USER").and()
-//      .withUser("admin").password("{noop}password").roles("ADMIN")
       .userDetailsService(oauthUserService)
       .passwordEncoder(passwordEncoder)
     ;

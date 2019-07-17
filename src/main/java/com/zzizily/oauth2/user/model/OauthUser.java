@@ -8,12 +8,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "OauthUser", schema = "oauth")
-@Builder
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Where(clause = "use_yn = 'Y'") //조회 조건
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
+@EqualsAndHashCode(of = {"id"})
+//@Where(clause = "use_yn = 'Y'") //조회 조건
 public class OauthUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +27,12 @@ public class OauthUser {
   @JoinColumn(name = "oauthUserId")
   private List<OauthUserRole> roles;
 
-  @Override
-  public String toString() {
-    return "OauthUser{" +
-      "id=" + id +
-      ", username='" + username + '\'' +
-      ", password='" + password + '\'' +
-      ", siteId=" + siteId +
-      ", roles=" + roles +
-      '}';
+  @Builder
+  public OauthUser(String username, String password, int siteId, String useYn, List<OauthUserRole> roles) {
+    this.username = username;
+    this.password = password;
+    this.siteId = siteId;
+    this.useYn = useYn;
+    this.roles = roles;
   }
 }
