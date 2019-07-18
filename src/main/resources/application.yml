@@ -127,7 +127,7 @@ management:
 
 security:
   oauth2:
-    authorization:
+    resource:
       jwt:
         key-value: |
           -----BEGIN PUBLIC KEY-----
@@ -139,7 +139,6 @@ security:
           vbV7iP/fE7LbfrO7UFXtLFh+uKX7OE3RCoPoAR5R6glfktQ4WnCBuvb6cP4ddCDJ
           mwIDAQAB
           -----END PUBLIC KEY-----
-
 logging:
   level:
     ROOT: warn
