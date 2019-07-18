@@ -11,17 +11,16 @@ import javax.persistence.*;
 @EqualsAndHashCode(of = {"id"})
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@AllArgsConstructor
 public class OauthUserRole {
   @Id
+  @Column
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Long oauthUserId;
+
   private String role;
 
   @Builder
-  public OauthUserRole(Long oauthUserId, String role) {
-    this.oauthUserId = oauthUserId;
+  public OauthUserRole(String role) {
     this.role = role;
   }
 }

@@ -27,12 +27,12 @@ spring:
   profiles: local
   datasource:
     platform: h2
-#    url: jdbc:h2:~/oauth2;DB_CLOSE_ON_EXIT=FALSE
-    url: jdbc:h2:mem:oauth;DB_CLOSE_ON_EXIT=FALSE;
+    url: jdbc:h2:file:~/oauth;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE;SCHEMA=oauth
+#    url: jdbc:h2:mem:oauth;DB_CLOSE_ON_EXIT=FALSE;
     username: sa
     password:
     driver-class-name: org.h2.Driver
-    initialization-mode: embedded
+    initialization-mode: never
 #    script 에서 한글 입력 가능 하게
     sql-script-encoding: UTF-8
 #    SQL 오류 발생하면 안종료 - true, 종료 - false
@@ -44,6 +44,8 @@ spring:
       settings:
         web-allow-others: true
   jpa:
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate.format_sql: true
       hibernate.show_sql: true
@@ -56,11 +58,11 @@ spring:
       # create-drop: SessionFactory가 시작될 때 스키마를 drop하고 재생성하며, SessionFactory가 종료될 때도 스키마를 drop 한다.
       # validate: 데이터베이스 스키마를 검증 한다.
       # update: 데이터베이스 스키마를 갱신 한다.
-      ddl-auto: create
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     show-sql: true
     open-in-view: true
-    database-platform: org.hibernate.dialect.H2Dialect
-    database: h2
 
 management:
   endpoints:
@@ -137,10 +139,6 @@ security:
           vbV7iP/fE7LbfrO7UFXtLFh+uKX7OE3RCoPoAR5R6glfktQ4WnCBuvb6cP4ddCDJ
           mwIDAQAB
           -----END PUBLIC KEY-----
-
-
-
-
 
 logging:
   level:

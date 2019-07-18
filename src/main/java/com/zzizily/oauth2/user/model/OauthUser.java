@@ -1,7 +1,6 @@
 package com.zzizily.oauth2.user.model;
 
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,7 +23,7 @@ public class OauthUser {
   private String useYn;
 
   @OneToMany(targetEntity = OauthUserRole.class, fetch = FetchType.EAGER)
-  @JoinColumn(name = "oauthUserId")
+  @JoinColumn(name = "id")
   private List<OauthUserRole> roles;
 
   @Builder
