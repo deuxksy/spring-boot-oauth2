@@ -19,6 +19,7 @@ public class OauthUser {
   private Long id;
   private String username;
   private String password;
+  private String fullName;
   private int siteId;
   private String useYn;
 
@@ -27,9 +28,10 @@ public class OauthUser {
   private List<OauthUserRole> roles;
 
   @Builder
-  public OauthUser(String username, String password, int siteId, String useYn, List<OauthUserRole> roles) {
+  public OauthUser(String username, String password, String fullName, int siteId, String useYn, List<OauthUserRole> roles) {
     this.username = username;
     this.password = password;
+    this.fullName = fullName;
     this.siteId = siteId;
     this.useYn = useYn;
     this.roles = roles;

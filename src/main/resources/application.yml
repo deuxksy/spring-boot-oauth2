@@ -32,7 +32,7 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-    initialization-mode: never
+    initialization-mode: embedded
 #    script 에서 한글 입력 가능 하게
     sql-script-encoding: UTF-8
 #    SQL 오류 발생하면 안종료 - true, 종료 - false
@@ -58,7 +58,7 @@ spring:
       # create-drop: SessionFactory가 시작될 때 스키마를 drop하고 재생성하며, SessionFactory가 종료될 때도 스키마를 drop 한다.
       # validate: 데이터베이스 스키마를 검증 한다.
       # update: 데이터베이스 스키마를 갱신 한다.
-      ddl-auto: validate
+      ddl-auto: create-drop
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     show-sql: true
