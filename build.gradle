@@ -151,8 +151,8 @@ dependencies {
   testImplementation      "org.junit.platform:junit-platform-engine:${dependencyJunitPlatform}"
   testImplementation      "org.junit.platform:junit-platform-commons:${dependencyJunitPlatform}"
   testImplementation      "org.junit.vintage:junit-vintage-engine:${dependencyJunitJupiter}"
-  // test db
-  testRuntimeOnly         "com.h2database:h2"
   testCompileOnly         "org.projectlombok:lombok"
   testAnnotationProcessor "org.projectlombok:lombok"
+  // test db
+  testRuntimeOnly         "com.h2database:h2"
 }

@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import javax.sql.DataSource;
 
@@ -56,6 +57,21 @@ public class BeanConfig {
   }
 
   @Bean
+  public CommonsRequestLoggingFilter requestLoggingFilter() {
+    CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
+    loggingFilter.setIncludeHeaders(true);
+    loggingFilter.setIncludeQueryString(true);
+    loggingFilter.setIncludePayload(true);
+    loggingFilter.setIncludeClientInfo(true);
+    loggingFilter.setMaxPayloadLength(100);
+    loggingFilter.setBeforeMessagePrefix("BEFORE ===\n");
+    loggingFilter.setBeforeMessageSuffix("\n=== BEFORE");
+    loggingFilter.setAfterMessagePrefix("AFTER ===\n");
+    loggingFilter.setAfterMessageSuffix("\n=== AFTER");
+    return loggingFilter;
+  }
+
+//  @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
     CorsConfiguration corsConfiguration = new CorsConfiguration();

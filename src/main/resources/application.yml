@@ -21,7 +21,20 @@ management:
     health:
       show-details: ALWAYS
 
+tricycle:
+  domain: trcc.com
+  url:
+    cloud-oauth: http://cloud-oauth-local-service-pig.${tricycle.domain}:18002
+
 ---
+
+server:
+  port: 18002
+  undertow:
+    accesslog:
+      enabled: true
+      dir: log
+      rotate: true
 
 spring:
   profiles: local
@@ -69,6 +82,7 @@ management:
     web:
       cors:
         allowed-origins:
+          - chrome-extension://aejoelaoggembcahagimdiliamlcdmfm
           - http://www.halfclub.com
           - http://www.boribori.co.kr
           - http://www.ogage.co.kr
@@ -125,28 +139,37 @@ management:
           - DELETE
         allow-credentials: true
 
-security:
-  oauth2:
-    resource:
-      jwt:
-        key-value: |
-          -----BEGIN PUBLIC KEY-----
-          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2IjjRXQxM4u8kPMHoLYy
-          Q5+hrtzI86WxUkpoghpUNcp/3J6spLddBo74bgMjRm7HZjPWj5PUdvhGwDympE4N
-          zWRDhtfrDoCnxsAzLMSES3zql5VisJXSPGz2jmatVTsXL1icJq/muLJCw5u7Nez3
-          8kIGQQ+xbrUfmyL+5MnQrplfWG8xkX5E+zTUIoQgSh/50QWTajJ1QQaXeKQFRSEF
-          yt2DdU/BVMO4AflRpXvWnSY1AS+gTa/8RKktvANCeT/FunxXqMl84AYVeJGotdXc
-          vbV7iP/fE7LbfrO7UFXtLFh+uKX7OE3RCoPoAR5R6glfktQ4WnCBuvb6cP4ddCDJ
-          mwIDAQAB
-          -----END PUBLIC KEY-----
+#security:
+#  oauth2:
+#    client:
+#      client-id: client
+#      client-secret: password
+#      scope: read_profile, read_posts
+#    resource:
+#      token-info-uri: ${tricycle.url.cloud-oauth}/oauth/check_token #로컬일 경우 직접 OAUTH 호출하자
+#      jwt:
+#        key-value: |
+#          -----BEGIN PUBLIC KEY-----
+#          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2IjjRXQxM4u8kPMHoLYy
+#          Q5+hrtzI86WxUkpoghpUNcp/3J6spLddBo74bgMjRm7HZjPWj5PUdvhGwDympE4N
+#          zWRDhtfrDoCnxsAzLMSES3zql5VisJXSPGz2jmatVTsXL1icJq/muLJCw5u7Nez3
+#          8kIGQQ+xbrUfmyL+5MnQrplfWG8xkX5E+zTUIoQgSh/50QWTajJ1QQaXeKQFRSEF
+#          yt2DdU/BVMO4AflRpXvWnSY1AS+gTa/8RKktvANCeT/FunxXqMl84AYVeJGotdXc
+#          vbV7iP/fE7LbfrO7UFXtLFh+uKX7OE3RCoPoAR5R6glfktQ4WnCBuvb6cP4ddCDJ
+#          mwIDAQAB
+#          -----END PUBLIC KEY-----
 logging:
+  file:
+    max-history: 30
+  path: log
   level:
     ROOT: warn
     com.zzizily: debug
-#    org.springframework.boot: info
-#    org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener.debug: debug
-#    org.springframework.boot.devtools: debug
-#    org.springframework.web: debug
+    #    org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener.debug: debug
+    #    org.springframework.boot.devtools: debug
+    org.springframework.boot: info
+    org.springframework.web: info
+    org.springframework.web.filter: debug
+    org.springframework.security: debug
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql: trace
-    org.springframework.security: debug

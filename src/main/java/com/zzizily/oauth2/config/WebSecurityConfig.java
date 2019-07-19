@@ -4,6 +4,7 @@ import com.zzizily.oauth2.user.service.OauthUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,6 +14,7 @@ import javax.sql.DataSource;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final DataSource dataSource;
@@ -28,10 +30,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()
       .authorizeRequests()
         .antMatchers("/", "/h2-console/**","/actuator/**").permitAll()
-//        .antMatchers("/api/session").access("#oauth2.hasScope('test')")
-        .anyRequest().authenticated().and()
-      .formLogin()
-      .permitAll()
+        // .antMatchers("/api/session").hasAuthority("ROLE_ADMIN") == .antMatchers("/api/session").hasRole("ADMIN")
+        .antMatchers("/admin").hasRole("ADMIN")
+        .antMatchers("/user").hasRole("USER")
+        .antMatchers("/me").hasAnyRole("USER","ADMIN")
+        .anyRequest().permitAll()
     ;
   }
 

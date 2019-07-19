@@ -22,20 +22,18 @@ import java.util.List;
 @Slf4j
 public class OauthUserServiceImpl implements OauthUserService {
   private final OauthUserRepository oauthUserRepository;
-  public int siteId = 1; //하프 : 1, 보리 : 2
-
-  @Autowired
-  PasswordEncoder passwordEncoder;
+  private int siteId = 1; //하프 : 1, 보리 : 2
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public List<OauthUser> findAll() {
     return oauthUserRepository.findAll();
   }
 
-//  @Override
-//  public OauthUser getByUsername(String username) {
-//    return oauthUserRepository.findByUsername(username);
-//  }
+  @Override
+  public OauthUser getByUsername(String username) {
+    return oauthUserRepository.findByUsername(username);
+  }
 
   @Override
   public OauthUser save(OauthUser user) {

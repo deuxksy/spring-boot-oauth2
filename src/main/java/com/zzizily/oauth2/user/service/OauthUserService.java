@@ -12,7 +12,7 @@ public interface OauthUserService extends UserDetailsService {
 
   OauthUser save(OauthUser user);
 
-  //public OauthUser getByUsername(String username) ;
+  OauthUser getByUsername(String username);
 
   void delete(Long id);
 
