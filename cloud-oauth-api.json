@@ -5,15 +5,15 @@
     {
       "type": "Project",
       "id": "08cbcdde-0e51-4e12-93f8-a55d6226ce56",
-      "lastModified": "2019-07-12T14:15:23.834+09:00",
+      "lastModified": "2019-07-19T17:39:19.956+09:00",
       "name": "tricycle-cloud-oauth"
     },
     {
       "type": "Service",
-      "description": "Resource Owner Password Credentials Grant 방식 이용한 데이터 조회 및 refresh token 이용한 access token 재발급",
+      "description": "1. Resource Owner Password Credentials Grant 방식 이용한 token 을 발급\n2. access-token 을 이용한 데이터 조회\n3. refresh token 이용한 access token 재발급\n4. 재발급도니 access-token 을 이용한 데이터 조회\n",
       "id": "be9e3afa-ece1-436a-b33b-880df1ff5dac",
-      "lastModified": "2019-07-12T14:13:57.431+09:00",
-      "name": "password",
+      "lastModified": "2019-07-19T17:07:39.866+09:00",
+      "name": "01.local-password",
       "parentId": "08cbcdde-0e51-4e12-93f8-a55d6226ce56"
     },
     {
@@ -44,13 +44,13 @@
               "enabled": true,
               "type": "Text",
               "name": "username",
-              "value": "user"
+              "value": "${username}"
             },
             {
               "enabled": true,
               "type": "Text",
               "name": "password",
-              "value": "password"
+              "value": "${password}"
             }
           ]
         },
@@ -67,12 +67,12 @@
           "name": "http",
           "version": "V11"
         },
-        "host": "${host}:${port}",
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
         "path": "/oauth/token"
       },
-      "description": "access-token 요청",
+      "description": "인증서버에 access-token 요청",
       "id": "636ec24f-6660-420c-aeea-37b208925af5",
-      "lastModified": "2019-07-12T13:39:45.797+09:00",
+      "lastModified": "2019-07-19T15:29:28.294+09:00",
       "name": "01-request-token",
       "headers": [
         {
@@ -107,7 +107,7 @@
         }
       ],
       "metaInfo": {
-        "ownerId": "google-oauth2|110333266460028147313"
+        "ownerId": "github|8334910"
       },
       "parentId": "be9e3afa-ece1-436a-b33b-880df1ff5dac"
     },
@@ -137,18 +137,18 @@
           "name": "http",
           "version": "V11"
         },
-        "host": "${host}:${port}",
-        "path": "/api/session"
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
+        "path": "/api/data"
       },
-      "description": "access_token 을 이용한 data 요청",
+      "description": "api 서버에 access-token 을 이용한 data 조회",
       "id": "aff2cd1b-52f8-4cfd-aab7-f8194b7e7584",
-      "lastModified": "2019-07-12T13:43:43.751+09:00",
+      "lastModified": "2019-07-19T17:39:10.394+09:00",
       "name": "02.get-data",
       "headers": [
         {
           "enabled": true,
           "name": "Authorization",
-          "value": "Bearer ${\"tricycle-cloud-oauth\".\"password\".\"01-request-token\".\"response\".\"body\".\"access_token\"}"
+          "value": "Bearer ${\"tricycle-cloud-oauth\".\"01.local-password\".\"01-request-token\".\"response\".\"body\".\"access_token\"}"
         }
       ],
       "assertions": [
@@ -160,7 +160,7 @@
         }
       ],
       "metaInfo": {
-        "ownerId": "google-oauth2|110333266460028147313"
+        "ownerId": "github|8334910"
       },
       "parentId": "be9e3afa-ece1-436a-b33b-880df1ff5dac"
     },
@@ -193,7 +193,7 @@
               "enabled": true,
               "type": "Text",
               "name": "refresh_token",
-              "value": "${\"tricycle-cloud-oauth\".\"password\".\"01-request-token\".\"response\".\"body\".\"refresh_token\"}"
+              "value": "${\"tricycle-cloud-oauth\".\"01.local-password\".\"01-request-token\".\"response\".\"body\".\"refresh_token\"}"
             }
           ]
         },
@@ -202,16 +202,20 @@
       },
       "headersType": "Form",
       "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
         "scheme": {
           "name": "http",
           "version": "V11"
         },
-        "host": "${host}:${port}",
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
         "path": "/oauth/token"
       },
-      "description": "access-token 만료시 refresh-token 이용한 access-token 요청",
+      "description": "인증서버에 refresh-token 을 이용한 access-token 재요청",
       "id": "c5409fda-08f0-48fd-8f71-2dff9ed30204",
-      "lastModified": "2019-07-12T13:42:55.292+09:00",
+      "lastModified": "2019-07-19T17:07:39.880+09:00",
       "name": "03-refresh-token",
       "headers": [
         {
@@ -246,22 +250,406 @@
         }
       ],
       "metaInfo": {
-        "ownerId": "google-oauth2|110333266460028147313"
+        "ownerId": "github|8334910"
       },
       "parentId": "be9e3afa-ece1-436a-b33b-880df1ff5dac"
     },
     {
-      "type": "Scenario",
-      "description": "Authorization Code Grant Type 방식 을 이용한 데이터 조회 및 refres token 이용한 access token 재발급",
-      "id": "649c965a-446d-4277-8e75-bc4918cdcff9",
-      "lastModified": "2019-07-12T14:14:11.527+09:00",
-      "name": "authorization_code",
-      "requestOrder": [
-        "01-request-code",
-        "02-request-token",
-        "03.get-data",
-        "04-refresh-token"
+      "uriEditor": true,
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "refresh_token"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "refresh_token",
+              "value": "${\"tricycle-cloud-oauth\".\"password\".\"03-request-token\".\"response\".\"body\".\"access_token\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
+        "path": "/api/data"
+      },
+      "description": "api 서버에 재발급된 access_token 을 이용한 data 요청",
+      "id": "199e10ad-fd47-466d-b0b7-69ec6586e3d1",
+      "lastModified": "2019-07-19T17:39:19.956+09:00",
+      "name": "04-refresh-get-data",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${\"tricycle-cloud-oauth\".\"01.local-password\".\"03-refresh-token\".\"response\".\"body\".\"access_token\"}"
+        }
       ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "be9e3afa-ece1-436a-b33b-880df1ff5dac"
+    },
+    {
+      "type": "Service",
+      "description": "1. Resource Owner Password Credentials Grant 방식 이용한 token 을 발급\n2. access-token 을 이용한 데이터 조회\n3. refresh token 이용한 access token 재발급\n4. 재발급도니 access-token 을 이용한 데이터 조회\n",
+      "id": "80687ffb-f492-4aad-93ba-6a5a8b414ab5",
+      "lastModified": "2019-07-19T17:07:47.186+09:00",
+      "name": "02.cloud-oauth",
+      "parentId": "08cbcdde-0e51-4e12-93f8-a55d6226ce56"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "password"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "username",
+              "value": "${username}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "password",
+              "value": "${password}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
+        "path": "/oauth/token"
+      },
+      "description": "인증서버에 access-token 요청",
+      "id": "e2a7086b-f2c2-4b75-bd3a-9f7d6ab07d22",
+      "lastModified": "2019-07-19T17:07:22.287+09:00",
+      "name": "01-request-token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic  ${\"oauth-client-secret\".base64()}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.access_token",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.refresh_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "80687ffb-f492-4aad-93ba-6a5a8b414ab5"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Form",
+        "autoSetLength": true,
+        "textBody": "{\"error\":\"invalid_token\",\"error_description\":\"Invalid access token: 488d2ab0-6a99-4729-896d-0d22b30033c9\"}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-api\"}:${\"port-api\"}",
+        "path": "/api/data"
+      },
+      "description": "api 서버에 access-token 을 이용한 data 조회",
+      "id": "4ad4900b-8471-4301-9477-1b3e1b0df8b4",
+      "lastModified": "2019-07-19T17:07:47.198+09:00",
+      "name": "02.get-data",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${\"tricycle-cloud-oauth\".\"02.cloud-oauth\".\"01-request-token\".\"response\".\"body\".\"access_token\"}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "80687ffb-f492-4aad-93ba-6a5a8b414ab5"
+    },
+    {
+      "uriEditor": true,
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "refresh_token"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "refresh_token",
+              "value": "${\"tricycle-cloud-oauth\".\"02.cloud-oauth\".\"01-request-token\".\"response\".\"body\".\"refresh_token\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
+        "path": "/oauth/token"
+      },
+      "description": "인증서버에 refresh-token 을 이용한 access-token 재요청",
+      "id": "e6a2136d-6f42-4c56-9fd6-aec674f8a9a2",
+      "lastModified": "2019-07-19T17:07:47.198+09:00",
+      "name": "03-refresh-token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic  ${\"oauth-client-secret\".base64()}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.refresh_token",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.access_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "80687ffb-f492-4aad-93ba-6a5a8b414ab5"
+    },
+    {
+      "uriEditor": true,
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "refresh_token"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "refresh_token",
+              "value": "${\"tricycle-cloud-oauth\".\"password\".\"03-request-token\".\"response\".\"body\".\"access_token\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-api\"}:${\"port-api\"}",
+        "path": "/api/data"
+      },
+      "description": "api 서버에 재발급된 access_token 을 이용한 data 요청",
+      "id": "b1687292-04cb-4be7-991a-7461e81e50aa",
+      "lastModified": "2019-07-19T17:07:47.198+09:00",
+      "name": "04-refresh-get-data",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${\"tricycle-cloud-oauth\".\"02.cloud-oauth\".\"03-refresh-token\".\"response\".\"body\".\"access_token\"}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "80687ffb-f492-4aad-93ba-6a5a8b414ab5"
+    },
+    {
+      "type": "Service",
+      "description": "",
+      "id": "03b540ba-8eda-47af-86d4-dc32c194acd0",
+      "lastModified": "2019-07-19T17:13:38.432+09:00",
+      "name": "03.local-authorization-code",
       "parentId": "08cbcdde-0e51-4e12-93f8-a55d6226ce56"
     },
     {
@@ -342,12 +730,12 @@
           "name": "http",
           "version": "V11"
         },
-        "host": "{host}:${port}",
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
         "path": "/oauth/authorize"
       },
-      "description": "인증을 위한 code 요청 처음 한번 할때는 rest 기반이 아닌 웹브라우저로 OAuth Approval 이동하여서 수동으로 승인 작업이 필요함\n아래 페이지로 이동 하여서 직접 승인 작업을 해야함\n\nex) http://cloud-oauth-local-service-pig.trcc.com:8080/oauth/authorize?client_id=client&redirect_uri=http%3A%2F%2Fcloud-oauth-local-service-pig.trcc.com%3A8080%2Fcallback&response_type=code&scope=read_profile",
-      "id": "c18a3781-1449-4f89-8549-37d050e7702e",
-      "lastModified": "2019-07-12T14:15:23.834+09:00",
+      "description": "인증을 위한 code 요청 처음 한번 할때는 rest 기반이 아닌 웹브라우저로 OAuth Approval 이동하여서 수동으로 승인 작업이 필요함\n아래 페이지로 이동 하여서 직접 승인 작업을 해야함\n\nex) http://cloud-oauth-local-service-pig.trcc.com:18002/oauth/authorize?client_id=client&redirect_uri=http%3A%2F%2Fcloud-oauth-local-service-pig.trcc.com%3A8080%2Fcallback&response_type=code&scope=read_profile",
+      "id": "f5884d2d-c2d6-4d58-9d04-8c8f9629d3d0",
+      "lastModified": "2019-07-19T17:10:36.685+09:00",
       "name": "01-request-code",
       "headers": [
         {
@@ -371,9 +759,9 @@
         }
       ],
       "metaInfo": {
-        "ownerId": "google-oauth2|110333266460028147313"
+        "ownerId": "github|8334910"
       },
-      "parentId": "649c965a-446d-4277-8e75-bc4918cdcff9"
+      "parentId": "03b540ba-8eda-47af-86d4-dc32c194acd0"
     },
     {
       "type": "Request",
@@ -409,7 +797,7 @@
               "enabled": true,
               "type": "Text",
               "name": "code",
-              "value": "${\"tricycle-cloud-oauth\".\"authorization_code\".\"01-request-code\".\"response\".\"body\".\"code\"}"
+              "value": "${\"tricycle-cloud-oauth\".\"03.local-authorization-code\".\"01-request-code\".\"response\".\"body\".\"code\"}"
             }
           ]
         },
@@ -418,16 +806,20 @@
       },
       "headersType": "Form",
       "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
         "scheme": {
           "name": "http",
           "version": "V11"
         },
-        "host": "${\"host\"}:${\"port\"}",
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
         "path": "/oauth/token"
       },
       "description": "code 를 가지고 access_token 요청",
-      "id": "472e790e-9812-43de-8c09-abba094a6abf",
-      "lastModified": "2019-07-12T13:40:50.476+09:00",
+      "id": "c96316e2-8563-4b7b-a381-10da5401f206",
+      "lastModified": "2019-07-19T17:11:49.747+09:00",
       "name": "02-request-token",
       "headers": [
         {
@@ -456,9 +848,9 @@
         }
       ],
       "metaInfo": {
-        "ownerId": "google-oauth2|110333266460028147313"
+        "ownerId": "github|8334910"
       },
-      "parentId": "649c965a-446d-4277-8e75-bc4918cdcff9"
+      "parentId": "03b540ba-8eda-47af-86d4-dc32c194acd0"
     },
     {
       "type": "Request",
@@ -486,18 +878,18 @@
           "name": "http",
           "version": "V11"
         },
-        "host": "${host}:${port}",
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
         "path": "/api/session"
       },
       "description": "access_token 을 이용한 data 요청",
-      "id": "6c65f878-145e-462f-9a8f-acd87c56d628",
-      "lastModified": "2019-07-12T13:41:02.356+09:00",
+      "id": "15750044-1079-4be3-be0d-e18c6cd2d105",
+      "lastModified": "2019-07-19T17:14:46.763+09:00",
       "name": "03.get-data",
       "headers": [
         {
           "enabled": true,
           "name": "Authorization",
-          "value": "Bearer ${\"tricycle-cloud-oauth\".\"authorization_code\".\"02-request-token\".\"response\".\"body\".\"access_token\"}"
+          "value": "Bearer ${\"tricycle-cloud-oauth\".\"03.local-authorization-code\".\"02-request-token\".\"response\".\"body\".\"access_token\"}"
         }
       ],
       "assertions": [
@@ -509,9 +901,9 @@
         }
       ],
       "metaInfo": {
-        "ownerId": "google-oauth2|110333266460028147313"
+        "ownerId": "github|8334910"
       },
-      "parentId": "649c965a-446d-4277-8e75-bc4918cdcff9"
+      "parentId": "03b540ba-8eda-47af-86d4-dc32c194acd0"
     },
     {
       "uriEditor": true,
@@ -542,7 +934,7 @@
               "enabled": true,
               "type": "Text",
               "name": "refresh_token",
-              "value": "${\"tricycle-cloud-oauth\".\"authorization_code\".\"02-request-token\".\"response\".\"body\".\"refresh_token\"}"
+              "value": "${\"tricycle-cloud-oauth\".\"03.local-authorization-code\".\"02-request-token\".\"response\".\"body\".\"refresh_token\"}"
             }
           ]
         },
@@ -551,16 +943,20 @@
       },
       "headersType": "Form",
       "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
         "scheme": {
           "name": "http",
           "version": "V11"
         },
-        "host": "${host}:${port}",
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
         "path": "/oauth/token"
       },
       "description": "access_token 만료시 refresh-token 을 이용한 access-token 재발급",
-      "id": "13141052-39ed-4819-a4ab-fd219b86a646",
-      "lastModified": "2019-07-12T13:41:23.843+09:00",
+      "id": "57e91b83-5fb3-4722-a1fd-bd262874151e",
+      "lastModified": "2019-07-19T17:11:49.747+09:00",
       "name": "04-refresh-token",
       "headers": [
         {
@@ -595,25 +991,486 @@
         }
       ],
       "metaInfo": {
-        "ownerId": "google-oauth2|110333266460028147313"
+        "ownerId": "github|8334910"
       },
-      "parentId": "649c965a-446d-4277-8e75-bc4918cdcff9"
+      "parentId": "03b540ba-8eda-47af-86d4-dc32c194acd0"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Form",
+        "autoSetLength": true,
+        "textBody": "{\"error\":\"invalid_token\",\"error_description\":\"Invalid access token: 488d2ab0-6a99-4729-896d-0d22b30033c9\"}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
+        "path": "/api/session"
+      },
+      "description": "access_token 을 이용한 data 요청",
+      "id": "82c33a42-6228-47cc-9d0e-191847de1aad",
+      "lastModified": "2019-07-19T17:14:42.308+09:00",
+      "name": "05-refresh-get-data",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${\"tricycle-cloud-oauth\".\"03.local-authorization-code\".\"04-refresh-token\".\"response\".\"body\".\"access_token\"}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "03b540ba-8eda-47af-86d4-dc32c194acd0"
+    },
+    {
+      "type": "Service",
+      "id": "9a023a7d-2613-49c9-8f15-8f02bb0c8cf0",
+      "lastModified": "2019-07-19T17:13:22.974+09:00",
+      "name": "04.cloud-authorization-code",
+      "parentId": "08cbcdde-0e51-4e12-93f8-a55d6226ce56"
+    },
+    {
+      "uriEditor": true,
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "cient"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "redirect_uri",
+              "value": "http://localhost:9000/callback"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "response_type",
+              "value": "code"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true,
+        "textBody": "{\"error\":\"invalid_token\",\"error_description\":\"Invalid access token: 488d2ab0-6a99-4729-896d-0d22b30033c9\"}"
+      },
+      "headersType": "Form",
+      "retryConfiguration": {
+        "enabled": true,
+        "intervalInSeconds": 10,
+        "retryCount": 1
+      },
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "client_id",
+              "value": "client"
+            },
+            {
+              "enabled": true,
+              "name": "redirect_uri",
+              "value": "${callback}"
+            },
+            {
+              "enabled": true,
+              "name": "response_type",
+              "value": "code"
+            },
+            {
+              "enabled": true,
+              "name": "scope",
+              "value": "read_profile"
+            }
+          ]
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
+        "path": "/oauth/authorize"
+      },
+      "description": "인증을 위한 code 요청 처음 한번 할때는 rest 기반이 아닌 웹브라우저로 OAuth Approval 이동하여서 수동으로 승인 작업이 필요함\n아래 페이지로 이동 하여서 직접 승인 작업을 해야함\n\nex) http://cloud-oauth-local-service-pig.trcc.com:18002/oauth/authorize?client_id=client&redirect_uri=http%3A%2F%2Fcloud-oauth-local-service-pig.trcc.com%3A8080%2Fcallback&response_type=code&scope=read_profile",
+      "id": "54569c33-e9dd-4688-af73-cf927864945d",
+      "lastModified": "2019-07-19T17:12:22.210+09:00",
+      "name": "01-request-code",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic  ${\"oauth-username-password\".base64()}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "9a023a7d-2613-49c9-8f15-8f02bb0c8cf0"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "authorization_code"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "redirect_uri",
+              "value": "${callback}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "code",
+              "value": "${\"tricycle-cloud-oauth\".\"04.cloud-authorization-code\".\"01-request-code\".\"response\".\"body\".\"code\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
+        "path": "/oauth/token"
+      },
+      "description": "code 를 가지고 access_token 요청",
+      "id": "1e427f49-0dbf-4d82-bda6-082caf7c68d8",
+      "lastModified": "2019-07-19T17:13:22.997+09:00",
+      "name": "02-request-token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic ${\"oauth-client-secret\".base64()}"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.access_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "9a023a7d-2613-49c9-8f15-8f02bb0c8cf0"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Form",
+        "autoSetLength": true,
+        "textBody": "{\"error\":\"invalid_token\",\"error_description\":\"Invalid access token: 488d2ab0-6a99-4729-896d-0d22b30033c9\"}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-api\"}:${\"port-api\"}",
+        "path": "/api/data"
+      },
+      "description": "access_token 을 이용한 data 요청",
+      "id": "7b1adf16-d5fd-40ef-8dc2-69f17f44c64a",
+      "lastModified": "2019-07-19T17:13:22.996+09:00",
+      "name": "03.get-data",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${\"tricycle-cloud-oauth\".\"04.cloud-authorization-code\".\"02-request-token\".\"response\".\"body\".\"access_token\"}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "9a023a7d-2613-49c9-8f15-8f02bb0c8cf0"
+    },
+    {
+      "uriEditor": true,
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "refresh_token"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "scope",
+              "value": "read_profile"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "refresh_token",
+              "value": "${\"tricycle-cloud-oauth\".\"04.cloud-authorization-code\".\"02-request-token\".\"response\".\"body\".\"refresh_token\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-oauth\"}:${\"port-oauth\"}",
+        "path": "/oauth/token"
+      },
+      "description": "access_token 만료시 refresh-token 을 이용한 access-token 재발급",
+      "id": "061f66c9-06ca-40a9-a0f7-bd59049edea5",
+      "lastModified": "2019-07-19T17:13:22.996+09:00",
+      "name": "04-refresh-token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic  ${\"oauth-client-secret\".base64()}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.refresh_token",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.access_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "9a023a7d-2613-49c9-8f15-8f02bb0c8cf0"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Form",
+        "autoSetLength": true,
+        "textBody": "{\"error\":\"invalid_token\",\"error_description\":\"Invalid access token: 488d2ab0-6a99-4729-896d-0d22b30033c9\"}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${\"host-api\"}:${\"port-api\"}",
+        "path": "/api/data"
+      },
+      "description": "access_token 을 이용한 data 요청",
+      "id": "a7c3fd9f-56b2-42f7-8cb2-e50ddce1853c",
+      "lastModified": "2019-07-19T17:13:22.997+09:00",
+      "name": "05-refresh-get-data",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${\"tricycle-cloud-oauth\".\"04.cloud-authorization-code\".\"04-refresh-token\".\"response\".\"body\".\"access_token\"}"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "github|8334910"
+      },
+      "parentId": "9a023a7d-2613-49c9-8f15-8f02bb0c8cf0"
     },
     {
       "type": "Context",
       "id": "9b91be62-0693-45e3-b484-85134d31e16c",
-      "lastModified": "2019-07-12T13:31:12.466+09:00",
+      "lastModified": "2019-07-19T17:38:20.983+09:00",
       "name": "tricycle-local",
       "variables": [
         {
           "enabled": true,
-          "name": "profile",
-          "value": "local"
+          "name": "callback",
+          "value": "http://cloud-oauth-local-service-pig.trcc.com:8080/callback"
         },
         {
           "enabled": true,
-          "name": "port",
-          "value": "8080"
+          "name": "host-api",
+          "value": "api-skeleton-local-service-pig.trcc.com"
+        },
+        {
+          "enabled": true,
+          "name": "host-oauth",
+          "value": "cloud-oauth-local-service-pig.trcc.com"
         },
         {
           "enabled": true,
@@ -627,13 +1484,28 @@
         },
         {
           "enabled": true,
-          "name": "host",
-          "value": "cloud-oauth-local-service-pig.trcc.com"
+          "name": "password",
+          "value": "password"
         },
         {
           "enabled": true,
-          "name": "callback",
-          "value": "http://cloud-oauth-local-service-pig.trcc.com:8080/callback"
+          "name": "port-api",
+          "value": "28001"
+        },
+        {
+          "enabled": true,
+          "name": "port-oauth",
+          "value": "18002"
+        },
+        {
+          "enabled": true,
+          "name": "profile",
+          "value": "local"
+        },
+        {
+          "enabled": true,
+          "name": "username",
+          "value": "user"
         }
       ]
     }
