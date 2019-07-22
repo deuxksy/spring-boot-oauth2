@@ -15,7 +15,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
       .authorizeRequests()
       .anyRequest().authenticated()
       .and().requestMatchers()
-        .antMatchers("/api/data")
+        .antMatchers("/api/**")
     ;
   }
 }
