@@ -1,17 +1,21 @@
 package com.zzizily.oauth2.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import javax.sql.DataSource;
@@ -21,6 +25,7 @@ import javax.sql.DataSource;
 public class BeanConfig {
 
   private final DataSource dataSource;
+  private final ResourceServerProperties resourceServerProperties;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -29,8 +34,8 @@ public class BeanConfig {
 
   @Bean
   public TokenStore tokenStore() {
-//    return new JwtTokenStore(jwtAccessTokenConverter());
-    return new JdbcTokenStore(dataSource);
+    return new JwtTokenStore(jwtAccessTokenConverter());
+//    return new JdbcTokenStore(dataSource);
   }
 
   @Bean
@@ -49,7 +54,7 @@ public class BeanConfig {
   @Bean
   public JwtAccessTokenConverter jwtAccessTokenConverter() {
     JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-    jwtAccessTokenConverter.setSigningKey("tricycle");
+    jwtAccessTokenConverter.setSigningKey(resourceServerProperties.getJwt().getKeyValue());
     return jwtAccessTokenConverter;
   }
 
@@ -67,6 +72,14 @@ public class BeanConfig {
     loggingFilter.setAfterMessageSuffix("\n=== AFTER");
     return loggingFilter;
   }
+
+  @Bean
+  @Primary
+  public JdbcClientDetailsService jdbcClientDetailsService(DataSource dataSource) {
+    // Jdbc(H2 데이터베이스)를 이용한 Oauth client 정보등록을 위한 설정입니다.
+    return new JdbcClientDetailsService(dataSource);
+  }
+
 
 /*  @Bean
   public CorsConfigurationSource corsConfigurationSource() {

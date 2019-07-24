@@ -1,8 +1,6 @@
 spring:
   profiles:
     active: local
-  application:
-    name: spring-boot-oauth2
   output:
     ansi:
       enabled: always
@@ -139,25 +137,17 @@ management:
           - DELETE
         allow-credentials: true
 
-#security:
-#  oauth2:
-#    client:
-#      client-id: client
-#      client-secret: password
-#      scope: read_profile, read_posts
-#    resource:
+security:
+  oauth2:
+    client:
+      client-id: local_client
+      client-secret: password
+      scope: read_profile, read_posts
+    resource:
 #      token-info-uri: ${tricycle.url.cloud-oauth}/oauth/check_token #로컬일 경우 직접 OAUTH 호출하자
-#      jwt:
-#        key-value: |
-#          -----BEGIN PUBLIC KEY-----
-#          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2IjjRXQxM4u8kPMHoLYy
-#          Q5+hrtzI86WxUkpoghpUNcp/3J6spLddBo74bgMjRm7HZjPWj5PUdvhGwDympE4N
-#          zWRDhtfrDoCnxsAzLMSES3zql5VisJXSPGz2jmatVTsXL1icJq/muLJCw5u7Nez3
-#          8kIGQQ+xbrUfmyL+5MnQrplfWG8xkX5E+zTUIoQgSh/50QWTajJ1QQaXeKQFRSEF
-#          yt2DdU/BVMO4AflRpXvWnSY1AS+gTa/8RKktvANCeT/FunxXqMl84AYVeJGotdXc
-#          vbV7iP/fE7LbfrO7UFXtLFh+uKX7OE3RCoPoAR5R6glfktQ4WnCBuvb6cP4ddCDJ
-#          mwIDAQAB
-#          -----END PUBLIC KEY-----
+      jwt:
+        key-value: jwt_secret_key
+
 logging:
   file:
     max-history: 30
