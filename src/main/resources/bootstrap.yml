@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: cloud-oauth
+  profiles:
+    active: local
+
+tricycle:
+  domain: trcc.com
+  account:
+    eureka-username: user
+    eureka-password: password
+
+---
+
+debug: true
+
+spring:
+  profiles: local
+#  cloud:
+#    config:
+#      label: develop
+#      uri: http://cloud-config-stage-service-pig.${tricycle.domain}:8888
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://${tricycle.account.eureka-username}:${tricycle.account.eureka-password}@cloud-eureka1-local-service-pig.${tricycle.domain}:8761/eureka/
+
+server:
+  port: 28001
