@@ -18,11 +18,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
       .authorizeRequests()
         .antMatchers("/", "/h2-console/**","/actuator/**", "/management/health").permitAll()
         .antMatchers(org.springframework.http.HttpMethod.OPTIONS, "/oauth/token").permitAll()
-        .anyRequest().authenticated().and()
-      .requestMatchers()
-      .antMatchers("/admin")
-      .antMatchers("/user")
-      .antMatchers("/me")
+        .anyRequest().authenticated()
+//      .and()
+//      .requestMatchers()
+//      .antMatchers("/admin")
+//      .antMatchers("/user")
+//      .antMatchers("/me")
     ;
   }
 
