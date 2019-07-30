@@ -75,68 +75,6 @@ spring:
     show-sql: true
     open-in-view: true
 
-management:
-  endpoints:
-    web:
-      cors:
-        allowed-origins:
-          - chrome-extension://aejoelaoggembcahagimdiliamlcdmfm
-          - http://www.halfclub.com
-          - http://www.boribori.co.kr
-          - http://www.ogage.co.kr
-          - http://www.trcc.tk
-          - http://cloud-eureka1-local-service-pig.trcc.com:8761
-          - http://cloud-eureka2-local-service-pig.trcc.com:8761
-          - http://cloud-config-local-service-pig.trcc.com:8888
-          - http://cloud-monitor-local-service-pig.trcc.com:8080
-          - http://cloud-oauth-local-service-pig.trcc.com:8081
-          - http://cloud-gateway-local-service-pig.trcc.com:8080
-          - http://api-skeleton-local-service-pig.trcc.com:28001
-          - http://api-skeleton-local-service-pig.trcc.com:28002
-          - http://api-skeleton-local-service-pig.trcc.com:28003
-          - http://api-skeleton-local-service-pig.trcc.com:28004
-          - http://api-skeleton-local-service-pig.trcc.com:28005
-          - http://client-skeleton-local-service-pig.trcc.com:38001
-          - http://mhalf-main-local-service-pig.trcc.com:38101
-          - http://half-list-local-service-pig.trcc.com:38102
-          - http://half-main-local-service-pig.trcc.com:38201
-          - http://half-list-local-service-pig.trcc.com:38202
-          - http://mbori-main-local-service-pig.trcc.com:38301
-          - http://mbori-list-local-service-pig.trcc.com:38302
-          - http://bori-main-local-service-pig.trcc.com:38401
-          - http://bori-list-local-service-pig.trcc.com:38402
-          - https://client-payment-local-service-pig.trcc.com:38443
-          - http://cloud-eureka1-local-service-pig.trcc.tk:8761
-          - http://cloud-eureka2-local-service-pig.trcc.tk:8761
-          - http://cloud-config-local-service-pig.trcc.tk:8888
-          - http://cloud-monitor-local-service-pig.trcc.tk:8080
-          - http://cloud-oauth-local-service-pig.trcc.tk:8081
-          - http://cloud-gateway-local-service-pig.trcc.tk:8080
-          - http://api-skeleton-local-service-pig.trcc.tk:28001
-          - http://api-skeleton-local-service-pig.trcc.tk:28002
-          - http://api-skeleton-local-service-pig.trcc.tk:28003
-          - http://api-skeleton-local-service-pig.trcc.tk:28004
-          - http://api-skeleton-local-service-pig.trcc.tk:28005
-          - http://client-skeleton-local-service-pig.trcc.tk:38001
-          - http://mhalf-main-local-service-pig.trcc.tk:38101
-          - http://half-list-local-service-pig.trcc.tk:38102
-          - http://half-main-local-service-pig.trcc.tk:38201
-          - http://half-list-local-service-pig.trcc.tk:38202
-          - http://mbori-main-local-service-pig.trcc.tk:38301
-          - http://mbori-list-local-service-pig.trcc.tk:38302
-          - http://bori-main-local-service-pig.trcc.tk:38401
-          - http://bori-list-local-service-pig.trcc.tk:38402
-          - https://client-payment-local-service-pig.trcc.tk:38443
-#        allowed-headers:
-#          - Access-Control-Allow-Origin
-        allowed-methods:
-          - GET
-          - POST
-          - PUT
-          - OPTION
-          - DELETE
-        allow-credentials: true
-
 security:
   oauth2:
     client:
@@ -151,7 +89,9 @@ security:
 logging:
   file:
     max-history: 30
-  path: log
+  path: ./log
+  pattern:
+    console: ${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m (%file:%line\) %n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}
   level:
     ROOT: warn
     com.zzizily: debug
