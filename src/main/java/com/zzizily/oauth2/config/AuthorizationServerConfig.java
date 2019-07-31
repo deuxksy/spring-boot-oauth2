@@ -43,9 +43,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
   @Override
   public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-
     super.configure(endpoints);
-
     endpoints
       .accessTokenConverter(jwtAccessTokenConverter)
       .authenticationManager(authenticationManager)

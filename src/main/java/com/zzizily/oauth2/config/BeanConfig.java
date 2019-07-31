@@ -1,6 +1,7 @@
 package com.zzizily.oauth2.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ public class BeanConfig {
 
   private final DataSource dataSource;
   private final ResourceServerProperties resourceServerProperties;
+  private final CorsEndpointProperties corsEndpointProperties;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -54,7 +56,8 @@ public class BeanConfig {
   @Bean
   public JwtAccessTokenConverter jwtAccessTokenConverter() {
     JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-    jwtAccessTokenConverter.setSigningKey(resourceServerProperties.getJwt().getKeyValue());
+    jwtAccessTokenConverter.setSigningKey(resourceServerProperties.getJwt()
+                                                                  .getKeyValue());
     return jwtAccessTokenConverter;
   }
 
@@ -73,60 +76,31 @@ public class BeanConfig {
     return loggingFilter;
   }
 
+  /*@Bean
+  public WebMvcConfigurer webMvcConfigurer() {
+    List<String> allowedOrigins = corsEndpointProperties.getAllowedOrigins();
+    List<String> allowedHeaders = corsEndpointProperties.getAllowedHeaders();
+    List<String> allowedMethods = corsEndpointProperties.getAllowedMethods();
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry
+          .addMapping("/**")
+          .allowedHeaders(allowedHeaders.toArray(new String[allowedHeaders.size()]))
+          .allowedMethods(allowedMethods.toArray(new String[allowedMethods.size()]))
+          .allowedOrigins("*")
+          .allowCredentials(corsEndpointProperties.getAllowCredentials())
+          .maxAge(corsEndpointProperties.getMaxAge().getSeconds())
+        ;
+      }
+    };
+  }*/
+
   @Bean
   @Primary
   public JdbcClientDetailsService jdbcClientDetailsService(DataSource dataSource) {
     // Jdbc(H2 데이터베이스)를 이용한 Oauth client 정보등록을 위한 설정입니다.
     return new JdbcClientDetailsService(dataSource);
   }
-
-
-/*  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-    CorsConfiguration corsConfiguration = new CorsConfiguration();
-
-//    corsConfiguration.addAllowedOrigin("*");
-//    corsConfiguration.addAllowedMethod("*");
-//    corsConfiguration.addAllowedHeader("*");
-//    corsConfiguration.setAllowCredentials(true);
-//    corsConfiguration.setMaxAge(3600L);
-
-    urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-    return urlBasedCorsConfigurationSource;
-  }*/
-
-  /**
-   * CorsConfigurationSource 적용 되지 않아 SimpleCorsFilter 로 사용
-   */
-  /*
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-
-    //CORS 요청을 허용할 사이트 (e.g. https://local.trcc.com)
-    List<String> allowedOrigins = new ArrayList();
-    allowedOrigins.add("https://localss.trcc.com:7443");
-    allowedOrigins.add("https://local.trcc.com:8443");
-    allowedOrigins.add("https://local.trcc.com:9443");
-    allowedOrigins.add("https://client-skeleton-dev-service-pig.trcc.com:8443");
-    allowedOrigins.add("https://api-skeleton-dev-service-pig.trcc.com:8443");
-
-    configuration.setAllowedOrigins(allowedOrigins);
-    //CORS 요청을 허용할 Http Method들 (e.g. GET,PUT,POST)
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
-    //특정 헤더를 가진 경우에만 CORS 요청을 허용할 경우
-    configuration.setAllowedHeaders(Arrays.asList("x-requested-with","content-type", "authorization"));
-    //자격증명과 함께 요청을 할 수 있는지 여부.
-    //해당 서버에서 Authorization로 사용자 인증도 서비스할 것이라면 true로 응답해야 할 것이다
-    configuration.setAllowCredentials(true);
-    //preflight 요청의 캐시 시간.
-    //configuration.setMaxAge(3600L);
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
-  */
 
 }
