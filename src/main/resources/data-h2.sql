@@ -16,9 +16,9 @@ INSERT INTO oauth_client_details (
   'local_client',
   null,
   '{noop}password',-- '{bcrypt}$2a$10$iP9ejueOGXO29.Yio7rqeuW9.yOC4YaV8fJp3eIWbP45eZSHFEwMG', -- password
-  'read_profile,read_posts', -- 'test'
+  'read,write', -- 'test'
   'authorization_code,implicit,password,client_credentials,refresh_token',
-  'http://cloud-oauth-local-service-pig.trcc.com:38001/callback,http://cloud-oauth-local-service-pig.trcc.com:18002/callback',
+  'http://cloud-oauth-local-service-pig.trcc.com:18002/oauth/callback,http://cloud-oauth-local-service-pig.trcc.tk:18002/oauth/callback',
   null,
   60,
   6000,
@@ -42,7 +42,7 @@ INSERT INTO oauth_client_details (
    'dev_client',
    null,
    '{noop}password',-- '{bcrypt}$2a$10$iP9ejueOGXO29.Yio7rqeuW9.yOC4YaV8fJp3eIWbP45eZSHFEwMG', -- password
-   'read_profile,read_posts', -- 'test'
+   'read,write', -- 'test'
    'authorization_code,implicit,password,client_credentials,refresh_token',
    'http://cloud-oauth-dev-service-pig.trcc.com:8080/login,http://cloud-oauth-dev-service-pig.trcc.com:8080/callback,http://cloud-oauth-dev-service-pig.trcc.com:8080/callback,http://cloud-oauth-stage-service-pig.trcc.com:8080/callback',
    null,

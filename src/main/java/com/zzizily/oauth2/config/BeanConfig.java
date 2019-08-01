@@ -1,7 +1,6 @@
 package com.zzizily.oauth2.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +26,6 @@ public class BeanConfig {
 
   private final DataSource dataSource;
   private final ResourceServerProperties resourceServerProperties;
-  private final CorsEndpointProperties corsEndpointProperties;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -37,7 +35,6 @@ public class BeanConfig {
   @Bean
   public TokenStore tokenStore() {
     return new JwtTokenStore(jwtAccessTokenConverter());
-//    return new JdbcTokenStore(dataSource);
   }
 
   @Bean
@@ -99,7 +96,6 @@ public class BeanConfig {
   @Bean
   @Primary
   public JdbcClientDetailsService jdbcClientDetailsService(DataSource dataSource) {
-    // Jdbc(H2 데이터베이스)를 이용한 Oauth client 정보등록을 위한 설정입니다.
     return new JdbcClientDetailsService(dataSource);
   }
 

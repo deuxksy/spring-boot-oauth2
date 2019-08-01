@@ -5,7 +5,7 @@ import com.zzizily.oauth2.user.model.OauthUserRole;
 import com.zzizily.oauth2.user.repository.OauthUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -66,6 +66,7 @@ public class OauthUserServiceImpl implements OauthUserService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     OauthUser user = oauthUserRepository.findByUsernameAndSiteId(username, this.siteId);
+    log.info("{}", Strings.join(user.getRoles().iterator(),','));
     if (user == null) {
       throw new UsernameNotFoundException("UsernameNotFound");
     }

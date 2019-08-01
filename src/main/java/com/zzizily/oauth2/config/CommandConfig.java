@@ -27,8 +27,8 @@ public class CommandConfig implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     log.debug("{}, {}", applicationName, profiles);
-    oauthUserRepository.save(OauthUser.builder().username("user").password("{noop}password").fullName("김사용자").siteId(1).useYn("Y").build());
     oauthUserRepository.save(OauthUser.builder().username("admin").password("{noop}password").fullName("김관리자").siteId(1).useYn("Y").build());
+    oauthUserRepository.save(OauthUser.builder().username("user").password("{noop}password").fullName("김사용자").siteId(1).useYn("Y").build());
     oauthUserRoleRepository.save(OauthUserRole.builder().role("ROLE_USER").build());
     oauthUserRoleRepository.save(OauthUserRole.builder().role("ROLE_ADMIN").build());
   }

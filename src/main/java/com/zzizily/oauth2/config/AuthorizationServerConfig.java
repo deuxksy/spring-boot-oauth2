@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
@@ -23,17 +22,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
   private final AuthenticationManager authenticationManager;
   private final DataSource dataSource;
-  private final TokenStore tokenStore;
   private final ApprovalStore approvalStore;
   private final PasswordEncoder passwordEncoder;
   private final JwtAccessTokenConverter jwtAccessTokenConverter;
   private final ClientDetailsService clientDetailsService;
   private final OauthUserService oauthUserService;
 
-  public AuthorizationServerConfig(AuthenticationConfiguration authenticationConfiguration, DataSource dataSource, TokenStore tokenStore, ApprovalStore approvalStore, PasswordEncoder passwordEncoder, JwtAccessTokenConverter jwtAccessTokenConverter, ClientDetailsService clientDetailsService, OauthUserService oauthUserService) throws Exception {
+  public AuthorizationServerConfig(AuthenticationConfiguration authenticationConfiguration, DataSource dataSource, ApprovalStore approvalStore, PasswordEncoder passwordEncoder, JwtAccessTokenConverter jwtAccessTokenConverter, ClientDetailsService clientDetailsService, OauthUserService oauthUserService) throws Exception {
     this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
     this.dataSource = dataSource;
-    this.tokenStore = tokenStore;
     this.approvalStore = approvalStore;
     this.passwordEncoder = passwordEncoder;
     this.jwtAccessTokenConverter = jwtAccessTokenConverter;
@@ -42,28 +39,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
   }
 
   @Override
-  public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-    super.configure(endpoints);
-    endpoints
+  public void configure(AuthorizationServerEndpointsConfigurer authorizationServerEndpointsConfigurer) throws Exception {
+    super.configure(authorizationServerEndpointsConfigurer);
+    authorizationServerEndpointsConfigurer
       .accessTokenConverter(jwtAccessTokenConverter)
       .authenticationManager(authenticationManager)
       .approvalStore(approvalStore)
-//      .tokenStore(tokenStore)
 //      .userDetailsService(oauthUserService)
     ;
   }
 
   @Override
-  public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-    clients
+  public void configure(ClientDetailsServiceConfigurer clientDetailsServiceConfigurer) throws Exception {
+    clientDetailsServiceConfigurer
       .jdbc(dataSource)
       .passwordEncoder(passwordEncoder)
     ;
   }
 
   @Override
-  public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-    oauthServer
+  public void configure(AuthorizationServerSecurityConfigurer authorizationServerSecurityConfigurer) throws Exception {
+    authorizationServerSecurityConfigurer
       .tokenKeyAccess("permitAll()")
       .checkTokenAccess("isAuthenticated()")
     ;

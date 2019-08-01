@@ -95,7 +95,7 @@ server:
   undertow:
     accesslog:
       enabled: true
-      dir: log
+      dir: ./log
       rotate: true
 
 spring:
@@ -108,9 +108,9 @@ spring:
     password:
     driver-class-name: org.h2.Driver
     initialization-mode: embedded
-#    script 에서 한글 입력 가능 하게
     sql-script-encoding: UTF-8
-#    SQL 오류 발생하면 안종료 - true, 종료 - false
+# SQL 오류 발생하면
+# 안종료 - true, 종료 - false
     continue-on-error: false
   h2:
     console:
@@ -145,12 +145,7 @@ spring:
 
 security:
   oauth2:
-#    client:
-#      client-id: local_client
-#      client-secret: password
-#      scope: read_profile, read_posts
     resource:
-#      token-info-uri: ${tricycle.url.cloud-oauth}/oauth/check_token #로컬일 경우 직접 OAUTH 호출하자
       jwt:
         key-value: jwt_secret_key
     sso:
@@ -165,8 +160,6 @@ logging:
   level:
     ROOT: warn
     com.zzizily: debug
-    #    org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener.debug: debug
-    #    org.springframework.boot.devtools: debug
     org.springframework.boot: info
     org.springframework.web: info
     org.springframework.web.filter: debug

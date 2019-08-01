@@ -31,3 +31,8 @@ eureka:
 
 server:
   port: 28001
+  undertow:
+    accesslog:
+      dir: log
+      enabled: true
+      rotate: true
