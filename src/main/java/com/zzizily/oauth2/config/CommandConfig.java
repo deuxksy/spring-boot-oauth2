@@ -1,9 +1,9 @@
 package com.zzizily.oauth2.config;
 
-import com.zzizily.oauth2.user.model.OauthUser;
-import com.zzizily.oauth2.user.model.OauthUserRole;
-import com.zzizily.oauth2.user.repository.OauthUserRepository;
-import com.zzizily.oauth2.user.repository.OauthUserRoleRepository;
+import com.zzizily.oauth2.user.model.UserRoleVO;
+import com.zzizily.oauth2.user.model.UserVO;
+import com.zzizily.oauth2.user.repository.UserRepository;
+import com.zzizily.oauth2.user.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,16 +21,16 @@ public class CommandConfig implements CommandLineRunner {
   @Value("${spring.profiles.active}")
   private String profiles;
 
-  private final OauthUserRepository oauthUserRepository;
-  private final OauthUserRoleRepository oauthUserRoleRepository;
+  private final UserRepository userRepository;
+  private final UserRoleRepository userRoleRepository;
 
   @Override
   public void run(String... args) throws Exception {
     log.debug("{}, {}", applicationName, profiles);
-    oauthUserRepository.save(OauthUser.builder().username("admin").password("{noop}password").fullName("김관리자").siteId(1).useYn("Y").build());
-    oauthUserRepository.save(OauthUser.builder().username("user").password("{noop}password").fullName("김사용자").siteId(1).useYn("Y").build());
-    oauthUserRoleRepository.save(OauthUserRole.builder().role("ROLE_USER").build());
-    oauthUserRoleRepository.save(OauthUserRole.builder().role("ROLE_ADMIN").build());
+    UserVO kadmin = userRepository.save(UserVO.builder().username("admin").password("{noop}password").fullName("김관리자").enabled(Boolean.TRUE).build());
+    UserVO kuser =  userRepository.save(UserVO.builder().username("user").password("{noop}password").fullName("김사용자").enabled(Boolean.TRUE).build());
+    userRoleRepository.save(UserRoleVO.builder().username(kadmin.getUsername()).role("ADMIN").build());
+    userRoleRepository.save(UserRoleVO.builder().username(kuser.getUsername()).role("USER").build());
   }
 }
 

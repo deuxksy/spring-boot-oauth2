@@ -102,8 +102,8 @@ spring:
   profiles: local
   datasource:
     platform: h2
-    url: jdbc:h2:file:~/oauth;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE;SCHEMA=oauth
-#    url: jdbc:h2:mem:oauth;DB_CLOSE_ON_EXIT=FALSE;
+#    url: jdbc:h2:file:~/oauth;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+    url: jdbc:h2:mem:oauth;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -127,13 +127,7 @@ spring:
       hibernate.use_sql_comments: true
       hibernate.jdbc.lob.non_contextual_creation: true
     hibernate:
-      # ddl-auto 설정
-      # none: 기본 값이며 아무 일도 일어나지 않는다.
-      # create: 데이터베이스를 drop 한 후, 데이터베이스를 새로 생성한다.
-      # create-drop: SessionFactory가 시작될 때 스키마를 drop하고 재생성하며, SessionFactory가 종료될 때도 스키마를 drop 한다.
-      # validate: 데이터베이스 스키마를 검증 한다.
-      # update: 데이터베이스 스키마를 갱신 한다.
-      ddl-auto: create-drop
+      ddl-auto: create
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     show-sql: true
@@ -145,9 +139,16 @@ spring:
 
 security:
   oauth2:
+    client:
+      client-id: local_client
+      client-secret: password
+      scope: read, write
+      access-token-uri: ${tricycle.url.cloud-oauth}/oauth/token
+      user-authorization-uri: ${tricycle.url.cloud-oauth}/oauth/authorize
     resource:
       jwt:
         key-value: jwt_secret_key
+      token-info-uri: ${tricycle.url.cloud-oauth}/oauth/check_token #로컬일 경우 직접 OAUTH 호출하자
     sso:
       login-path: /login
 
@@ -159,9 +160,9 @@ logging:
     console: ${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m (%file:%line\) %n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}
   level:
     ROOT: warn
-    com.zzizily: debug
-    org.springframework.boot: info
-    org.springframework.web: info
+    com.zzizily: trace
+#    org.springframework.boot: info
+#    org.springframework.web: info
     org.springframework.web.filter: debug
     org.springframework.security: debug
     org.hibernate.SQL: debug

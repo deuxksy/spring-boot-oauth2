@@ -13,6 +13,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -28,14 +29,20 @@ public class SimpleCORSFilter implements Filter {
     HttpServletRequest request = (HttpServletRequest) req;
 
     String origin = request.getHeader("Origin");
+    Enumeration<String> headers = request.getHeaderNames();
+    while (headers.hasMoreElements()) {
+      String header = headers.nextElement();
+      log.trace("{}:{}", header, request.getHeader(header));
+    }
     if (corsEndpointProperties.getAllowedOrigins().contains(origin)) {
       response.setHeader("Access-Control-Allow-Origin", origin);
     }
+    response.setHeader("Content-Type", "application/json");
     response.setHeader("Access-Control-Allow-Methods", Strings.join(corsEndpointProperties.getAllowedMethods().iterator(), ','));
     response.setHeader("Access-Control-Allow-Headers", Strings.join(corsEndpointProperties.getAllowedHeaders().iterator(), ','));
     response.setHeader("Access-Control-Max-Age", "" + corsEndpointProperties.getMaxAge().getSeconds());
 
-    log.info("{}", response.getHeader("Access-Control-Allow-Origin"));
+    log.debug("{}", response.getHeader("Access-Control-Allow-Origin"));
 
     if (StringUtils.equalsIgnoreCase("OPTIONS", request.getMethod())) {
       response.setStatus(HttpServletResponse.SC_OK);

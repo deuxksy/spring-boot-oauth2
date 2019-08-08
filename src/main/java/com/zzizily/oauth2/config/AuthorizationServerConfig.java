@@ -1,6 +1,6 @@
 package com.zzizily.oauth2.config;
 
-import com.zzizily.oauth2.user.service.OauthUserService;
+import com.zzizily.oauth2.user.service.UserService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -26,16 +26,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
   private final PasswordEncoder passwordEncoder;
   private final JwtAccessTokenConverter jwtAccessTokenConverter;
   private final ClientDetailsService clientDetailsService;
-  private final OauthUserService oauthUserService;
+  private final UserService userService;
 
-  public AuthorizationServerConfig(AuthenticationConfiguration authenticationConfiguration, DataSource dataSource, ApprovalStore approvalStore, PasswordEncoder passwordEncoder, JwtAccessTokenConverter jwtAccessTokenConverter, ClientDetailsService clientDetailsService, OauthUserService oauthUserService) throws Exception {
+  public AuthorizationServerConfig(AuthenticationConfiguration authenticationConfiguration, DataSource dataSource, ApprovalStore approvalStore, PasswordEncoder passwordEncoder, JwtAccessTokenConverter jwtAccessTokenConverter, ClientDetailsService clientDetailsService, UserService userService) throws Exception {
     this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
     this.dataSource = dataSource;
     this.approvalStore = approvalStore;
     this.passwordEncoder = passwordEncoder;
     this.jwtAccessTokenConverter = jwtAccessTokenConverter;
     this.clientDetailsService = clientDetailsService;
-    this.oauthUserService = oauthUserService;
+    this.userService = userService;
   }
 
   @Override
@@ -45,7 +45,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
       .accessTokenConverter(jwtAccessTokenConverter)
       .authenticationManager(authenticationManager)
       .approvalStore(approvalStore)
-//      .userDetailsService(oauthUserService)
     ;
   }
 
