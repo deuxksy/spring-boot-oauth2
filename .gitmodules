@@ -1,0 +1,6 @@
+[submodule "core"]
+	path = core
+	url = ssh://git@alm-version.trcc.dev:10022/service/common/core.git
+[submodule "api-model"]
+	path = api-model
+	url = ssh://git@alm-version.trcc.dev:10022/service/api/api-model.git
