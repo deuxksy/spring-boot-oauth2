@@ -3,6 +3,14 @@ spring:
     name: cloud-oauth
   profiles:
     active: local
+    include:
+      - core
+      - jasypt
+#      - http2
+      - tricycle
+      - monitor
+      - cloud
+
 
 tricycle:
   domain: trcc.com
@@ -16,10 +24,10 @@ debug: true
 
 spring:
   profiles: local
-#  cloud:
-#    config:
-#      label: develop
-#      uri: http://cloud-config-stage-service-pig.${tricycle.domain}:8888
+  cloud:
+    config:
+      label: develop
+      uri: http://cloud-config-stage-service-pig.${tricycle.domain}:8888
 
 eureka:
   instance:

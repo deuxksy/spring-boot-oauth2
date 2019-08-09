@@ -85,6 +85,9 @@ management:
 
 tricycle:
   domain: trcc.com
+  account:
+    eureka-username: user
+    eureka-password: password
   url:
     cloud-oauth: http://cloud-oauth-local-service-pig.${tricycle.domain}:18002
 

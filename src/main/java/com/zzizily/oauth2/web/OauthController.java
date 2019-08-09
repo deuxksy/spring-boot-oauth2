@@ -30,14 +30,4 @@ public class OauthController {
       log.error("{}", e);
     }
   }
-
-  @GetMapping("/login")
-  public String login(HttpServletRequest request, Model model, HttpSession session) {
-    return "/tricycle/login";
-  }
-
-  @GetMapping("/loginForm")
-  public String loginForm(HttpServletRequest request, Model model, HttpSession session) {
-    return "/tricycle/loginForm";
-  }
 }

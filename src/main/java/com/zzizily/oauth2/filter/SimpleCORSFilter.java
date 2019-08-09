@@ -36,13 +36,13 @@ public class SimpleCORSFilter implements Filter {
     }
     if (corsEndpointProperties.getAllowedOrigins().contains(origin)) {
       response.setHeader("Access-Control-Allow-Origin", origin);
+    } else {
+      log.trace("{}", origin);
     }
     response.setHeader("Content-Type", "application/json");
     response.setHeader("Access-Control-Allow-Methods", Strings.join(corsEndpointProperties.getAllowedMethods().iterator(), ','));
     response.setHeader("Access-Control-Allow-Headers", Strings.join(corsEndpointProperties.getAllowedHeaders().iterator(), ','));
     response.setHeader("Access-Control-Max-Age", "" + corsEndpointProperties.getMaxAge().getSeconds());
-
-    log.debug("{}", response.getHeader("Access-Control-Allow-Origin"));
 
     if (StringUtils.equalsIgnoreCase("OPTIONS", request.getMethod())) {
       response.setStatus(HttpServletResponse.SC_OK);

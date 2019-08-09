@@ -11,7 +11,6 @@ SET SCHEMA oauth;
 -- DROP TABLE IF EXISTS oauth_approvals;
 -- DROP TABLE IF EXISTS users;
 
--- used in tests that use HSQL
 create table if not exists oauth_client_details
 (
   client_id               VARCHAR(256) PRIMARY KEY,

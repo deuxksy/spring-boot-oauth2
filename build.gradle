@@ -89,7 +89,7 @@ jar {
 
 gitProperties {
   dateFormat = "yyyy-MM-dd HH:mm:ss"
-  dateFormatTimeZone = "Asia/Seoul"
+  dateFormatgTimeZone = "Asia/Seoul"
 }
 
 docker {
@@ -120,6 +120,12 @@ dependencyManagement {
 }
 
 dependencies {
+  if ("local" == profile || "dev" == profile || "stage" == profile) {
+    implementation project(":core")
+    implementation project(":api-model")
+  } else if ("prod" == profile) {
+  }
+
   implementation          "org.springframework.boot:spring-boot-starter-web"
   implementation          "org.springframework.boot:spring-boot-starter-undertow"
   implementation          "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -130,16 +136,21 @@ dependencies {
   compileOnly             "org.springframework.boot:spring-boot-configuration-processor"
   annotationProcessor     "org.springframework.boot:spring-boot-configuration-processor"
 
-//  implementation          "org.springframework.boot:spring-boot-starter-oauth2-client"
-//  implementation          "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+  implementation          "org.springframework.boot:spring-boot-starter-oauth2-client"
+  implementation          "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
   implementation          "org.springframework.cloud:spring-cloud-starter-oauth2"
   implementation          "org.springframework.cloud:spring-cloud-starter-security"
+  implementation          "org.springframework.cloud:spring-cloud-starter-config"
+  implementation          "org.springframework.cloud:spring-cloud-config-client"
   implementation          "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
   implementation          "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.6.RELEASE"
   implementation          "org.springframework.security:spring-security-jwt:1.0.10.RELEASE"
   implementation          "com.h2database:h2"
   compileOnly             "org.projectlombok:lombok"
   annotationProcessor     "org.projectlombok:lombok"
+  implementation          "io.springfox:springfox-swagger2:${dependencySwagger}"
+  implementation          "io.springfox:springfox-swagger-ui:${dependencySwagger}"
+  implementation          "io.springfox:springfox-bean-validators:${dependencySwagger}"
 
   testImplementation     ("org.springframework.boot:spring-boot-starter-test") {
     exclude module:       "junit"

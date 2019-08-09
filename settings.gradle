@@ -4,3 +4,5 @@ pluginManagement {
   }
 }
 rootProject.name = 'spring-boot-oauth2'
+include "core"
+include "api-model"
